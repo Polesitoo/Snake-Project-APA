@@ -1,5 +1,5 @@
 """
-Joc de Snake, projecte de Pol Raich de l'asignatura Algorismia i programació audiovisual en l'universitat politecnica de catalunya
+Main code for the game, all code comented above.
 
 """
 
@@ -7,16 +7,15 @@ import turtle
 import random
 import time
 
-posponer = 0.05
+difficulty = 0.05                   # Speed that snake moves
 
 
-# Screen Configuration
+# Screen basic configuration
 window = turtle.Screen()
-window.bgpic("img\Background.gif")
+window.bgpic("img\Background.gif")              # Importing an .gif image to set as background
 window.title("Snake Game")
-window.setup(width = 1000, height = 700)
-window.tracer(0)
-
+window.setup(width = 1000, height = 700)        # Resolution of the opened screen
+window.tracer(0)                                # Improves animation
 
 
 # Snake head
@@ -28,17 +27,20 @@ head.penup()                        # Removes the trail of the turtle
 head.goto(0,0)                      # Centers the head of the snake
 head.direction = 'stop'
 
+
 # Food
 food = turtle.Turtle()
 food.speed(0)
 food.shape('circle')
 food.color('#F25BEB')
 food.penup()
-food.goto(random.randint(-480, 480), random.randint(-320,280))                    # The food has to spawn between -500, 500 and letting a margin of 20px for not beeing in the border.
+food.goto(random.randint(-480, 480), random.randint(-320, 280))         # The food has to spawn between -500, 500 | 280, -320 and letting a margin of 20px for not beeing spawned in the border.
+
 
 # Snake Body
 body = []
-body_color = [("#63E066"),("#8BE051"),("#6AE0A6"),("#91E080")]
+body_color = [("#63E066"), ("#8BE051"), ("#6AE0A6"), ("#91E080")]
+
 
 #Text Printed
 text = turtle.Turtle()
@@ -47,7 +49,8 @@ text.color("#3E0C65")
 text.penup()
 text.hideturtle()
 text.goto(0, 310)
-text.write('Puntos: 0                      Puntos Maximos: 0', align='center', font=("Arial", 20, "normal"))
+text.write('Puntos: 0           |           Puntos Maximos: 0', align='center', font=("Arial", 20, "normal"))
+
 
 points = 0
 maxpoints = 0
@@ -64,30 +67,47 @@ def printtext():
         maxpoints = points
         
     text.clear()
-    text.write(f'Puntos: {points}                       Puntos Maximos: {maxpoints}', align='center', font=("Arial", 20, "normal"))
+    text.write(f'Puntos: {points}           |           Puntos Maximos: {maxpoints}', align='center', font=("Arial", 20, "normal"))
 
 
 # Movements
 def move_up():
+    """
+    Change the direction of the head to -> up
+    """
+
     head.direction = 'up'
   
     
 def move_down():
+    """
+    Change the direction of the head to -> down
+    """
+    
     head.direction = 'down'
 
     
 def move_left():
+    """
+    Change the direction of the head to -> left
+    """
+    
     head.direction = 'left'
  
     
 def move_right():
+    """
+    Change the direction of the head to -> right
+    """
+    
     head.direction = 'right'
 
 
 def movment():
     """
-    
+    Updates de location of the turtle to the new one corresponding to the movement
     """
+    
     if head.direction == 'up':
         y = head.ycor()
         head.sety(y + 20)
@@ -109,6 +129,7 @@ def IncraseSnakeSize():
     """
     
     """
+    
     global points
     part = turtle.Turtle()
     part.speed(0)
@@ -124,6 +145,7 @@ def Bodymovment():
     """
     
     """
+    
     Body_len = len(body)
     
     for part in range(Body_len - 1, 0, -1):
@@ -142,6 +164,7 @@ def Eatfood():
     """
     
     """
+    
     if head.distance(food) < 20:
         food.goto(random.randint(-480, 480), random.randint(-320, 280))
         IncraseSnakeSize()  
@@ -151,6 +174,7 @@ def Border():
     """
     
     """
+    
     global points
     
     if head.xcor() > 480 or head.ycor() > 280 or  head.xcor() < -480 or head.ycor() < -320 :
@@ -168,6 +192,7 @@ def eat():
     """
     
     """
+    
     global points
     for part in body:
         if head.distance(part) < 20:
@@ -192,13 +217,16 @@ window.onkeypress(move_left,'a')
 window.onkeypress(move_down,'s')
 window.onkeypress(move_right,'d')
 
+# Infinity loop to run the game using the functions declared above
 while True:
     window.update()
     
     Border()
+    
     Eatfood()
     eat()
+    
     Bodymovment()
     movment()
     
-    time.sleep(posponer)
+    time.sleep(difficulty)
